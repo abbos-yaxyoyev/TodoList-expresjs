@@ -1,0 +1,20 @@
+{
+	"folders": [
+		{
+			"path": "..\\..\\..\\TodoList"
+		},
+		{
+			"path": "..\\..\\..\\mystore-main"
+		},
+		{
+			"path": "..\\.."
+		},
+		{
+			"path": "..\\..\\..\\..\\MERN\\FarkhodDadajonovMern\\express"
+		}
+	],
+	"settings": {
+		"liveServer.settings.multiRootWorkspaceName": "TodoList",
+		"git.ignoreLimitWarning": true
+	}
+}

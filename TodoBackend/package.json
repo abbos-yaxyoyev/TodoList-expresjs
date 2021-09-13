@@ -9,10 +9,16 @@
   "author": "Yaxyoyev Abbos",
   "license": "ISC",
   "dependencies": {
+    "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
     "express": "^4.17.1",
+    "express-handlebars": "^5.3.3",
     "express-joi-validate": "^3.0.1",
     "joi": "^17.4.2",
+    "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.13.7"
+  },
+  "devDependencies": {
+    "dotenv": "^10.0.0"
   }
 }

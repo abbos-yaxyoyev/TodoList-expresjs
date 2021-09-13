@@ -2,9 +2,26 @@ const Joi = require('joi');
 function validateTodoList(todoList) {
     const todoValidates = Joi.object({
         title: Joi.string().required().min(3),
-    });
-
+    })
     return todoValidates.validate(todoList);
+}
+
+function validateUcer(user) {
+    const userValidated = Joi.object({
+        name: Joi.string().required().min(3).max(30),
+        lastName: Joi.string().required().min(3).max(30),
+        email: Joi.string().required().min(7).max(100).email(),
+        password: Joi.string().required().min(6).max(100),
+    })
+    return userValidated.validate(user);
+}
+
+function validateEmailPassword(req) {
+    const validatedAuth = Joi.object({
+        email: Joi.string().required().min(7).max(100).email(),
+        password: Joi.string().required().min(6).max(100),
+    })
+    return validatedAuth.validate(req);
 }
 
 function errorUserNotFound(res, user) {
@@ -16,5 +33,7 @@ function errorUserNotFound(res, user) {
 
 module.exports = {
     validateTodoList,
+    validateUcer,
+    validateEmailPassword,
     errorUserNotFound
 }

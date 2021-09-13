@@ -20,20 +20,7 @@ body {
   background-size: cover;
   background-repeat: no-repeat;
   background-clip: content-box;
-  /* transition: background-color 0.5s linear; */
-  /* fallback for old browsers */
-  /* background: -webkit-linear-gradient(to right, #91eae4, #86a8e7, #2193b0); */
-  /* Chrome 10-25, Safari 5.1-6 */
-  /* background: linear-gradient(to right, #91eae4, #86a8e7, #2193b0); */
-  /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-  /* background: linear-gradient(to right, #84c1ff, #add6ff); */
-  /* #bdc3c7 → #2c3e50 */
-  /* #2193b0 → #6dd5ed */
-  /* #06beb6 → #48b1bf */
-  /* #eacda3 → #d6ae7b */
-  /* #4ca1af → #c4e0e5 */
-  /* #009688 • #35a79c • #54b2a9 • #65c3ba • #83d0c9 */
-  /* #84c1ff • #add6ff • #d6eaff • #eaf4ff • #f8fbff */
+  background-attachment: fixed;
 }
 
 h1,
@@ -78,6 +65,17 @@ p {
   );
 }
 
+.logout {
+  position: fixed;
+  left: 10px;
+  top: 10px;
+}
+
+.btnLogout {
+  padding: 6px 12px;
+  border-radius: 8px;
+}
+
 .img-logo {
   border-radius: 50%;
 }
@@ -120,16 +118,20 @@ h3 + h3 {
 }
 
 .container-output {
-  width: 60%;
-  margin-left: auto;
   display: flex;
-  justify-content: space-between;
+  /* justify-content: space-between; */
+  flex-direction: column;
+  justify-content: end;
+  width: 56%;
+  position: fixed;
+  top: 50px;
+  right: 50px;
 }
 .first-form {
   display: flex;
-  justify-content: row;
-  width: 60%;
-  margin-left: auto;
+  position: fixed;
+  right: 51px;
+  width: 56%;
 }
 
 .first-form > input {
@@ -153,21 +155,17 @@ form > button {
   color: #fff;
 }
 /*================================================================*/
-.container-output {
-  width: 60%;
-  margin-left: auto;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+
+.ulDiv {
+  width: 100%;
 }
 ul {
+  height: 88vh;
+  overflow: auto;
   display: flex;
   flex-direction: column;
   list-style-type: none;
   padding-inline-start: 0;
-}
-.ulDiv {
-  width: 100%;
 }
 .todo-doing,
 .todo-done {
@@ -185,14 +183,7 @@ li {
     rgb(26 136 244),
     rgb(8 75 133)
   );
-  /* background: linear-gradient(
-    to bottom right,
-    rgb(53, 152, 246),
-    rgb(130, 189, 247),
-    rgb(175, 211, 245),
-    rgb(126, 186, 245),
-    rgb(72, 159, 240)
-  ); */
+
   padding: 5px 10px;
 }
 li + li {

@@ -1,88 +1,108 @@
 const { getTodos, postCreatTodo, getId, deletModulTodo, patchModulCompleted, putModulTitle } = require('../models/TodoListModules');
 const { validateTodoList, errorUserNotFound } = require('../utils/utils');
 
+//************************************************************************* */
+
 async function getAllTodos(req, res) {
+    const { _id } = req.user;
     try {
-        const users = await getTodos();
+        const users = await getTodos(_id);
         errorUserNotFound(res, users);
-        res.status(201).send(users)
+        res.status(201).send(JSON.stringify(users.titles));
     } catch (err) {
-        res.status(500).send(JSON.stringify({ message: err.message }))
+        res.status(500).send({ message: err.message })
     }
 }
+
+//************************************************************************* */
 
 async function getTodoById(req, res) {
     const { id } = req.params;
+    const { _id } = req.user;
     try {
-        const user = await getId(id);
+        const user = await getId(_id, id);
         errorUserNotFound(res, user);
-        res.status(201).send(user)
+        res.status(201).send(user[0].titles);
     } catch (err) {
-        res.status(500).send(JSON.stringify({ message: err.message }))
+        res.status(500).send({ message: err.message });
     }
 }
 
+//************************************************************************* */
+
 async function postTodo(req, res) {
-    const { error, value } = validateTodoList(req.body);
+    const { error } = validateTodoList(req.body);
     if (error) {
         return res.status(404).send(error.details.map(x => x.message).join(', '))
     }
     const { title } = req.body;
+    const { _id } = req.user;
     try {
-        const saveUser = await postCreatTodo(title);
-        res.status(200).send(saveUser);
+        const user = await postCreatTodo(_id, title);
+        res.status(200).send(JSON.stringify(user.titles.pop()));
     } catch (err) {
-        res.status(500).send(JSON.stringify({ message: err.message }))
+        res.status(500).send({ message: err.message })
     }
 }
+
+//************************************************************************* */
 
 async function deleteTodo(req, res) {
     const { id } = req.params;
+    const { _id } = req.user;
     try {
-        const user = await getId(id);
-        errorUserNotFound(res, user);
-        const userDelete = await deletModulTodo(id)
-        res.status(201).send(JSON.stringify({
+        const user = await getId(_id, id);
+        errorUserNotFound(res, user[0].titles);
+        const userTodoList = await deletModulTodo(_id, id);
+        res.status(201).send({
             message: "Product has been deleted",
             todo: {
-                ...JSON.parse(JSON.stringify(userDelete))
+                ...userTodoList
             }
-        }))
+        })
     } catch (err) {
-        res.status(500).send(JSON.stringify({ message: err.message }))
+        res.status(500).send({ message: err.message })
     }
 }
 
+//************************************************************************* */
+
 async function patchCompleted(req, res) {
     const { id } = req.params;
+    const { _id } = req.user;
     try {
-        const user = await getId(id);
-        errorUserNotFound(res, user);
-        await patchModulCompleted(id, user)
-        res.status(201).send(JSON.stringify({ message: "Product has been updated" }))
+        const user = await getId(_id, id);
+        errorUserNotFound(res, user[0].titles);
+        const title = await patchModulCompleted(_id, id, user[0].titles);
+        res.status(201).send(title)
     } catch (err) {
-        res.status(500).send(JSON.stringify({ message: err.message }))
+        res.status(500).send({ message: err.message })
     }
 }
+
+//************************************************************************* */
 
 async function putTitle(req, res) {
     const { title } = req.body;
     const { id } = req.params;
+    const { _id } = req.user;
 
-    const { error, value } = validateTodoList(req.body);
+    const { error } = validateTodoList(req.body);
     if (error) {
         return res.status(404).send(error.details.map(x => x.message).join(', '))
     }
 
     try {
-        const user = await getId(id);
-        errorUserNotFound(res, user);
-        let str = await putModulTitle(id, title)
-        res.status(201).send(str)
+        const user = await getId(_id, id);
+        errorUserNotFound(res, user[0].titles);
+        await putModulTitle(_id, id, title)
+        res.status(201).send(new Date());
     } catch (err) {
-        res.status(500).send(JSON.stringify({ message: err.message }))
+        res.status(500).send({ message: err.message })
     }
 }
+
+//************************************************************************* */
 
 module.exports = {
     getAllTodos,

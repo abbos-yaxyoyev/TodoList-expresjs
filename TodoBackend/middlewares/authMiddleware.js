@@ -1,0 +1,38 @@
+const jwt = require('jsonwebtoken')
+const secret = process.env.SECRET_KEY
+
+function checkUser(req, res, next) {
+  const { authorization } = req.headers;
+  // let headers = JSON.parse(authorization)
+  if (authorization && authorization.split(" ")[0] === 'Bearer') {
+    token = authorization.split(" ")[1];
+    if (!token) {
+      res.status(401).send({ message: 'Error token not found' });
+    }
+    let decoded = jwt.verify(token, secret)
+    req.user = decoded
+    next();
+  } else {
+    res.status(401).send({ message: 'Unauthorization' })
+  }
+}
+
+function checkToken(req, res, next) {
+  const { authorization } = req.headers;
+  // let headers = JSON.parse(authorization)
+  if (authorization && authorization.split(" ")[0] === 'Bearer') {
+    token = authorization.split(" ")[1];
+    let decoded = jwt.verify(token, secret);
+    if (decoded) {
+      return res.status(201).send({ message: true });
+    }
+    return res.status(401).send({ message: false })
+  } else {
+    return res.status(401).send({ message: false })
+  }
+}
+
+module.exports = {
+  checkUser,
+  checkToken
+}

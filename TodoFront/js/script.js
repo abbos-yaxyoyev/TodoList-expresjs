@@ -1,21 +1,58 @@
-document.addEventListener("DOMContentLoaded", function () {
+window.addEventListener("DOMContentLoaded", function () {
+    //!check token
+    tokenCheck()
+    async function tokenCheck() {
+        try {
+            await fetch('http://localhost:3000/api/checkedToken', {
+                method: 'GET',
+                headers: {
+                    'Authorization': 'Bearer ' + localStorage.getItem('token')
+                }
+            })
+                .then(res => res.json())
+                .then(res => {
+                    if (res.message === false) {
+                        window.location.assign('./login.html')
+                    }
+                })
+                .catch(err => alert(err.message));
+        } catch (err) {
+            console.log(err.message);
+        }
+    }
+
+    //!***********************************************************************!/
+
     const todoInput = document.querySelector('#input'),
-        todoAddButton = document.querySelector('.btnAddTodo'),
+        todoAddButton = document.querySelector('.first-form'),
         todoFilterTodo = document.querySelectorAll('.h3'),
         todoAllList = document.querySelector(".all-todos"),
         todoDoing = document.querySelector('.todo-doing'),
         todoDone = document.querySelector(".todo-done"),
         todoBtn = document.querySelector('.btn');
+    //*******************/
+    const logaut = document.querySelector('.logout');
 
+    //************************************************************************* */
     const url = 'http://localhost:3000/api/todoList';
 
-    todoAddButton.addEventListener('click', addTodolist);
+    todoAddButton.addEventListener('submit', addTodolist);
     todoAllList.addEventListener('click', deleteTodo);
     todoDoing.addEventListener('click', deleteTodo);
     todoDone.addEventListener('click', deleteTodo);
     todoBtn.addEventListener('click', filterTodo);
     window.addEventListener('load', upDateAllTodo, true);
 
+    //! logaut website
+    logaut.addEventListener('click', () => {
+        localStorage.removeItem('token');
+        window.location.assign('./login.html')
+    });
+
+
+
+    //************************************************************************* */
+    //! filter Post or Put request
     function addTodolist(e) {
         e.preventDefault();
         if (todoAddButton.id) {
@@ -25,12 +62,15 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
+    //************************************************************************* */
+    //! creat todo list
     async function todoAdd(e) {
+        e.preventDefault();
         let liTag = document.createElement('li');
-
         await fetch(url, {
             method: 'POST',
             headers: {
+                'Authorization': 'Bearer ' + localStorage.getItem('token'),
                 'Accept': 'application/json, text/plain, */*',
                 "Content-Type": "application/json"
             },
@@ -40,7 +80,7 @@ document.addEventListener("DOMContentLoaded", function () {
         })
             .then(res => res.json())
             .then(res => {
-                let date = date_to_string(res.updatedAt)
+                let date = date_to_string(res.date)
                 liTag.innerHTML = ` <p>${todoInput.value}</p>
                                     <section>
                                         <p>${date}</p>
@@ -58,6 +98,8 @@ document.addEventListener("DOMContentLoaded", function () {
         todoInput.value = '';
     }
 
+    //************************************************************************* */
+    //! delete todo list
     async function deleteTodo(e) {
         const item = e.target;
         const todo = item.parentElement.parentElement.parentElement;
@@ -66,6 +108,9 @@ document.addEventListener("DOMContentLoaded", function () {
             //* delete from mongoDB
             await fetch(`${url}/` + todo.id, {
                 method: 'DELETE',
+                headers: {
+                    'Authorization': 'Bearer ' + localStorage.getItem('token')
+                }
             })
                 .then(res => res.json())
                 .then(res => {
@@ -88,11 +133,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
     }
 
+    //************************************************************************* */
+    //! todo list done complated status
     async function complateTodo(todo, id) {
         //* add complate class
         await fetch(`${url}/` + id, {
             method: 'PATCH',
             headers: {
+                'Authorization': 'Bearer ' + localStorage.getItem('token'),
                 'Accept': 'application/json, text/plain, */*',
                 'Content-Type': 'application/json'
             },
@@ -117,11 +165,15 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
+    //************************************************************************* */
+    //! edit todo list
     async function editTodo(e) {
+        e.preventDefault();
         const id = todoAddButton.id;
         await fetch(`${url}/` + id, {
             method: 'PUT',
             headers: {
+                'Authorization': 'Bearer ' + localStorage.getItem('token'),
                 'Accept': 'application/json, text/plain, */*',
                 'Content-Type': 'application/json'
             },
@@ -131,7 +183,7 @@ document.addEventListener("DOMContentLoaded", function () {
         })
             .then(res => res.json())
             .then(res => {
-                let date = date_to_string(res.date)
+                let date = date_to_string(res)
                 if (todoFilterTodo[0].classList.contains('h3Btn')) {
                     todoAllList.childNodes.forEach((element, index, arrayNode) => {
                         if (element.id === id) {
@@ -157,11 +209,12 @@ document.addEventListener("DOMContentLoaded", function () {
             })
             .catch(err => console.log(err.message))
 
-
         todoAddButton.removeAttribute('id');
         todoInput.value = '';
     }
 
+    //************************************************************************* */
+    //! filter todo list All todo, Doing todo, Done todo list
     async function filterTodo(e) {
 
         if (e.target.id === 'all-todo') {
@@ -196,16 +249,19 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
     }
 
+    //************************************************************************* */
 
     async function upDateAllTodo() {
         await fetch(url, {
             method: 'GET',
+            headers: {
+                'Authorization': 'Bearer ' + localStorage.getItem('token')
+            }
         })
             .then(res => res.json())
             .then((data) => {
-
                 data.forEach(function (element, index, arrayNode) {
-                    let date = date_to_string(element.date)
+                    let date = date_to_string(element.updatedAt)
                     if (element.completed === true) {
                         todoAllList.innerHTML += `<li id="${element._id}" class="completed">
                                                     <p>${element.title}</p>
@@ -238,16 +294,20 @@ document.addEventListener("DOMContentLoaded", function () {
             .catch(err => console.log(err))
     }
 
+    //************************************************************************* */
+
     async function upDateDoing() {
         await fetch(url, {
             method: 'GET',
+            headers: {
+                'Authorization': 'Bearer ' + localStorage.getItem('token')
+            }
         })
             .then(res => res.json())
             .then((data) => {
-
                 data.forEach(function (element, index, arrayNode) {
                     if (element.completed === false) {
-                        let date = date_to_string(element.date);
+                        let date = date_to_string(element.updatedAt);
                         todoDoing.innerHTML += `<li id="${element._id}">
                                                 <p>${element.title}</p>
                                                 <section>
@@ -260,22 +320,25 @@ document.addEventListener("DOMContentLoaded", function () {
                                                 </section>
                                             </li>
                                             `
-
                     }
                 })
             })
             .catch(err => console.log(err))
     }
 
+    //************************************************************************* */
+
     async function upDateDone() {
         await fetch(url, {
             method: 'GET',
+            headers: {
+                'Authorization': 'Bearer ' + localStorage.getItem('token')
+            }
         })
             .then(res => res.json())
             .then((data) => {
-
                 data.forEach(function (element, index, arrayNode) {
-                    let date = date_to_string(element.date)
+                    let date = date_to_string(element.updatedAt)
                     if (element.completed === true) {
                         todoDone.innerHTML += `<li id="${element._id}" class="completed">
                                                 <p>${element.title}</p>
@@ -296,14 +359,12 @@ document.addEventListener("DOMContentLoaded", function () {
             .catch(err => console.log(err))
     }
 
+    //************************************************************************* */
+
     function date_to_string(jsonDate) {
         let backToDate = new Date(jsonDate);
         let arr = backToDate.toString().split(' ');
-
         return `${arr[1]}/${arr[2]}/${arr[3]}        Week days:${arr[0]}         ${arr[4]}`;
     }
 
 });
-
-
-

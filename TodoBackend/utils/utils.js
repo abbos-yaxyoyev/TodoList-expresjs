@@ -6,14 +6,14 @@ function validateTodoList(todoList) {
     return todoValidates.validate(todoList);
 }
 
-function validateUcer(user) {
+async function validateUcer(user) {
     const userValidated = Joi.object({
         name: Joi.string().required().min(3).max(30),
         lastName: Joi.string().required().min(3).max(30),
         email: Joi.string().required().min(7).max(100).email(),
         password: Joi.string().required().min(6).max(100),
     })
-    return userValidated.validate(user);
+    return await userValidated.validate(user);
 }
 
 function validateEmailPassword(req) {

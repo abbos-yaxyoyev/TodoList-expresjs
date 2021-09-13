@@ -8,9 +8,10 @@ const secret = process.env.SECRET_KEY
 
 async function createUser(req, res) {
 
-    const { error } = validateUcer(req.body);
+    const { error } = await validateUcer(req.body);
     if (error) {
-        return res.status(404).send(error.details.map(x => x.message).join(', '))
+        let errorMessage = error.details[0].message;
+        return res.status(404).send(errorMessage)
     }
 
     const { name, lastName, email, password } = req.body

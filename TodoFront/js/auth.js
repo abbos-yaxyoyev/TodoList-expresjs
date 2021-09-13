@@ -3,7 +3,8 @@ document.addEventListener("DOMContentLoaded", function () {
         lastName = document.querySelector('#lastname'),
         email = document.querySelector('#email'),
         password = document.querySelector('#password'),
-        submit = document.querySelector('.submit');
+        submit = document.querySelector('.submit'),
+        error_output = document.querySelector('.output-error');
 
     const url = 'http://localhost:3000/api/newUserSaveRouter';
     submit.addEventListener('click', authorization);
@@ -24,10 +25,23 @@ document.addEventListener("DOMContentLoaded", function () {
                 password: password.value
             })
         })
-            .then(res => res.json())
+            .then(res => {
+                console.log(res);
+                if (res.status == 404)
+                    return 404;
+                if (res.status == 400)
+                    return 400;
+                if (res.status == 200)
+                    return res.json()
+            })
             .then(body => {
-                console.log(body);
-                if (body) {
+                if (body == 404) {
+                    error_output.textContent = `Form data is incorrect `;
+                }
+                if (body == 400) {
+                    error_output.textContent = `email or password already exists`;
+                }
+                if (body && body != 404 && body != 400) {
                     localStorage.setItem('token', body);
                     window.location.assign('./index.html')
                 }

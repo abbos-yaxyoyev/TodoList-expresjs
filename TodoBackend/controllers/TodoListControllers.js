@@ -4,14 +4,11 @@ const { validateTodoList, errorUserNotFound } = require('../utils/utils');
 //************************************************************************* */
 
 async function getAllTodos(req, res) {
+    // throw new Error('serverdagi hatolik yuz berdi');
     const { _id } = req.user;
-    try {
-        const users = await getTodos(_id);
-        errorUserNotFound(res, users);
-        res.status(201).send(JSON.stringify(users.titles));
-    } catch (err) {
-        res.status(500).send({ message: err.message })
-    }
+    const users = await getTodos(_id);
+    errorUserNotFound(res, users);
+    res.status(201).send(JSON.stringify(users.titles));
 }
 
 //************************************************************************* */
@@ -19,13 +16,9 @@ async function getAllTodos(req, res) {
 async function getTodoById(req, res) {
     const { id } = req.params;
     const { _id } = req.user;
-    try {
-        const user = await getId(_id, id);
-        errorUserNotFound(res, user);
-        res.status(201).send(user[0].titles);
-    } catch (err) {
-        res.status(500).send({ message: err.message });
-    }
+    const user = await getId(_id, id);
+    errorUserNotFound(res, user);
+    res.status(201).send(user[0].titles);
 }
 
 //************************************************************************* */
@@ -37,12 +30,8 @@ async function postTodo(req, res) {
     }
     const { title } = req.body;
     const { _id } = req.user;
-    try {
-        const user = await postCreatTodo(_id, title);
-        res.status(200).send(JSON.stringify(user.titles.pop()));
-    } catch (err) {
-        res.status(500).send({ message: err.message })
-    }
+    const user = await postCreatTodo(_id, title);
+    res.status(200).send(JSON.stringify(user.titles.pop()));
 }
 
 //************************************************************************* */
@@ -50,19 +39,15 @@ async function postTodo(req, res) {
 async function deleteTodo(req, res) {
     const { id } = req.params;
     const { _id } = req.user;
-    try {
-        const user = await getId(_id, id);
-        errorUserNotFound(res, user[0].titles);
-        const userTodoList = await deletModulTodo(_id, id);
-        res.status(201).send({
-            message: "Product has been deleted",
-            todo: {
-                ...userTodoList
-            }
-        })
-    } catch (err) {
-        res.status(500).send({ message: err.message })
-    }
+    const user = await getId(_id, id);
+    errorUserNotFound(res, user[0].titles);
+    const userTodoList = await deletModulTodo(_id, id);
+    res.status(201).send({
+        message: "Product has been deleted",
+        todo: {
+            ...userTodoList
+        }
+    })
 }
 
 //************************************************************************* */
@@ -70,14 +55,10 @@ async function deleteTodo(req, res) {
 async function patchCompleted(req, res) {
     const { id } = req.params;
     const { _id } = req.user;
-    try {
-        const user = await getId(_id, id);
-        errorUserNotFound(res, user[0].titles);
-        const title = await patchModulCompleted(_id, id, user[0].titles);
-        res.status(201).send(title)
-    } catch (err) {
-        res.status(500).send({ message: err.message })
-    }
+    const user = await getId(_id, id);
+    errorUserNotFound(res, user[0].titles);
+    const title = await patchModulCompleted(_id, id, user[0].titles);
+    res.status(201).send(title)
 }
 
 //************************************************************************* */
@@ -92,14 +73,10 @@ async function putTitle(req, res) {
         return res.status(404).send(error.details.map(x => x.message).join(', '))
     }
 
-    try {
-        const user = await getId(_id, id);
-        errorUserNotFound(res, user[0].titles);
-        await putModulTitle(_id, id, title)
-        res.status(201).send(new Date());
-    } catch (err) {
-        res.status(500).send({ message: err.message })
-    }
+    const user = await getId(_id, id);
+    errorUserNotFound(res, user[0].titles);
+    await putModulTitle(_id, id, title);
+    res.status(201).send(new Date());
 }
 
 //************************************************************************* */

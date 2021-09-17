@@ -16,35 +16,31 @@ async function createUser(req, res) {
 
     const { name, lastName, email, password } = req.body
 
-    try {
-        const checkUser = await getUcerId(email);
-        if (checkUser) {
-            res.status(400).send({
-                message: `email or password already exists`
-            })
-        } else {
-            const hashedPassword = await bcrypt.hash(password, 12)
-            const newUser = {
-                name,
-                lastName,
-                email,
-                password: hashedPassword,
-            }
-            const user = await postCreatUcer(newUser);
-            console.log('user saved', user);
-            if (user) {
-                postCreatUcer_id(user._id);
-            }
-            console.log('token1');
-            const token = jwt.sign({ _id: user._id }, secret, { expiresIn: '12d' })
-            console.log('tokenUser: ', token);
-
-            res.status(200).send(JSON.stringify(token));
+    const checkUser = await getUcerId(email);
+    if (checkUser) {
+        res.status(400).send({
+            message: `email or password already exists`
+        })
+    } else {
+        const hashedPassword = await bcrypt.hash(password, 12)
+        const newUser = {
+            name,
+            lastName,
+            email,
+            password: hashedPassword,
         }
+        const user = await postCreatUcer(newUser);
+        console.log('user saved', user);
+        if (user) {
+            postCreatUcer_id(user._id);
+        }
+        console.log('token1');
+        const token = jwt.sign({ _id: user._id }, secret, { expiresIn: '12d' })
+        console.log('tokenUser: ', token);
 
-    } catch (err) {
-        console.log(err);
+        res.status(200).send(JSON.stringify(token));
     }
+
 }
 
 module.exports = {

@@ -10,26 +10,21 @@ async function loginAuth(req, res) {
     const { error } = validateEmailPassword(req.body);
     if (error) {
         let errorMessage = error.details.map(x => x.message).join(', ');
-        console.log(errorMessage);
         return res.status(404).send(JSON.stringify(errorMessage))
     }
 
-    try {
-        const user = await findAuthUser(email)
-        if (!user) {
-            res.status(400).send({ message: 'Login or Password is incorrect' })
-        }
-
-        const isMatch = await bcrypt.compare(password, user.password)
-        if (!isMatch) {
-            res.status(400).send({ message: 'Login or Password is incorrect' })
-        }
-
-        const token = jwt.sign({ _id: user._id }, secret, { expiresIn: '12d' })
-        res.status(200).send(JSON.stringify(token));
-    } catch (error) {
-        console.log(error.message);
+    const user = await findAuthUser(email)
+    if (!user) {
+        res.status(400).send({ message: 'Login or Password is incorrect' })
     }
+
+    const isMatch = await bcrypt.compare(password, user.password)
+    if (!isMatch) {
+        res.status(400).send({ message: 'Login or Password is incorrect' })
+    }
+
+    const token = jwt.sign({ _id: user._id }, secret, { expiresIn: '12d' })
+    res.status(200).send(JSON.stringify(token));
 
 }
 

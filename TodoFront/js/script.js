@@ -1,3 +1,6 @@
+if (!localStorage.getItem('token')) {
+    window.location.assign('./login.html')
+}
 window.addEventListener("DOMContentLoaded", function () {
     //!check token
     tokenCheck()
@@ -9,13 +12,23 @@ window.addEventListener("DOMContentLoaded", function () {
                     'Authorization': 'Bearer ' + localStorage.getItem('token')
                 }
             })
-                .then(res => res.json())
                 .then(res => {
-                    if (res.message === false) {
+                    if (res.status == 401)
+                        return 401;
+                    else
+                        if (res.status == 500)
+                            return 500;
+                        else
+                            if (res.status == 201)
+                                return res.json()
+                })
+                .then(res => {
+                    console.log(res);
+                    if (res === 401 || res === 500) {
                         window.location.assign('./login.html')
                     }
                 })
-                .catch(err => alert(err.message));
+                .catch(err => console.log(err.message));
         } catch (err) {
             console.log(err.message);
         }
@@ -261,7 +274,7 @@ window.addEventListener("DOMContentLoaded", function () {
             .then(res => res.json())
             .then((data) => {
                 data.forEach(function (element, index, arrayNode) {
-                    let date = date_to_string(element.updatedAt)
+                    let date = date_to_string(element.date)
                     if (element.completed === true) {
                         todoAllList.innerHTML += `<li id="${element._id}" class="completed">
                                                     <p>${element.title}</p>
@@ -307,7 +320,7 @@ window.addEventListener("DOMContentLoaded", function () {
             .then((data) => {
                 data.forEach(function (element, index, arrayNode) {
                     if (element.completed === false) {
-                        let date = date_to_string(element.updatedAt);
+                        let date = date_to_string(element.date);
                         todoDoing.innerHTML += `<li id="${element._id}">
                                                 <p>${element.title}</p>
                                                 <section>
@@ -338,7 +351,7 @@ window.addEventListener("DOMContentLoaded", function () {
             .then(res => res.json())
             .then((data) => {
                 data.forEach(function (element, index, arrayNode) {
-                    let date = date_to_string(element.updatedAt)
+                    let date = date_to_string(element.date)
                     if (element.completed === true) {
                         todoDone.innerHTML += `<li id="${element._id}" class="completed">
                                                 <p>${element.title}</p>

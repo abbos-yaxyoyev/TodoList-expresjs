@@ -1,11 +1,12 @@
 const mongoose = require('mongoose');
+const { logger } = require('../utils/logger');
 
 mongoose.connect("mongodb://localhost/todoListExpressJS", { useNewUrlParser: true, useUnifiedTopology: true })
     .then(() => {
-        console.log("mongodbga ulanish muvaffaqiyatli amalga oshdi !!!");
+        logger.debug("mongodbga ulanish muvaffaqiyatli amalga oshdi !!!");
     })
     .catch(err => {
-        console.log(err.message);
+        logger.log(err.message);
     });
 
 const title = new mongoose.Schema(
@@ -38,7 +39,7 @@ const titleSchema = new mongoose.Schema(
 const TitlesDate = mongoose.model("todoListEexpressJSes", titleSchema);
 
 async function postCreatUcer_id(_id) {
-    mongoose.set('useFindAndModify', false);
+    // mongoose.set('useFindAndModify', false);
     const userId = new TitlesDate({
         _id: _id,
     });
@@ -96,26 +97,28 @@ async function deletModulTodo(user_id, titleId) {
 }
 
 async function patchModulCompleted(this_id, titleId, title) {
+    mongoose.set('useFindAndModify', false);
     let _id = mongoose.Types.ObjectId(this_id);
     let id = mongoose.Types.ObjectId(titleId);
-    mongoose.set('useFindAndModify', true);
     let boolean = title.completed
     if (boolean) {
         boolean = false;
     } else {
         boolean = true;
     }
+    console.log('patchModulCompleted');
     return await TitlesDate.updateOne(
         { _id: _id },
         { $set: { "titles.$[element].completed": boolean } },
         { arrayFilters: [{ "element._id": { $eq: id } }] }
+        // { timestamps: false }
     );
 }
 
 async function putModulTitle(user_id, titleId, title) {
+    mongoose.set('useFindAndModify', false);
     let _id = mongoose.Types.ObjectId(user_id);
     let id = mongoose.Types.ObjectId(titleId);
-    mongoose.set('useFindAndModify', false);
     return await TitlesDate.findOneAndUpdate(
         { _id: _id },
         {

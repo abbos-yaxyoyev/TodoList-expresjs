@@ -23,7 +23,7 @@ prodMidleware(app)
 app.use(cors());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json({ extended: true }));
-app.use('/index', express.static(path.resolve(__dirname, '..', 'TodoFront')))
+app.use('/index', express.static(path.resolve(__dirname, 'TodoFront')))
 
 app.use('/api/checkedToken', checkToken);
 app.use('/api/authRouter', authRouter);

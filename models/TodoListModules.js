@@ -39,7 +39,6 @@ const titleSchema = new mongoose.Schema(
 const TitlesDate = mongoose.model("todoListEexpressJSes", titleSchema);
 
 async function postCreatUcer_id(_id) {
-    // mongoose.set('useFindAndModify', false);
     const userId = new TitlesDate({
         _id: _id,
     });
@@ -51,23 +50,18 @@ async function postCreatUcer_id(_id) {
 async function getTodos(_id) {
     return await TitlesDate.findOne(
         { _id },
-        function (err, docs) {
-            if (docs) {
-                console.log('getTodos');
-            } else {
-                console.log(err);
-            }
-        }
     )
 }
 
 async function postCreatTodo(id, title) {
     mongoose.set('useFindAndModify', false);
+    let _id = mongoose.Types.ObjectId(id);
     return await TitlesDate.findOneAndUpdate(
-        { _id: id },
+        { _id: _id },
         {
             $push: {
                 titles: {
+                    date: Date.now(),
                     title: title
                 }
             }
@@ -76,7 +70,6 @@ async function postCreatTodo(id, title) {
 }
 
 async function getId(user_id, titleId) {
-    console.log(titleId);
     let _id = mongoose.Types.ObjectId(user_id);
     let id = mongoose.Types.ObjectId(titleId);
     return await TitlesDate.aggregate([
@@ -106,7 +99,6 @@ async function patchModulCompleted(this_id, titleId, title) {
     } else {
         boolean = true;
     }
-    console.log('patchModulCompleted');
     return await TitlesDate.updateOne(
         { _id: _id },
         { $set: { "titles.$[element].completed": boolean } },

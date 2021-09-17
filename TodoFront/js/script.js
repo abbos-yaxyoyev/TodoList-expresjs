@@ -1,4 +1,5 @@
 if (!localStorage.getItem('token')) {
+    console.log('1');
     window.location.assign('./login.html')
 }
 window.addEventListener("DOMContentLoaded", function () {
@@ -23,6 +24,7 @@ window.addEventListener("DOMContentLoaded", function () {
                                 return res.json()
                 })
                 .then(res => {
+                    console.log('2');
                     console.log(res);
                     if (res === 401 || res === 500) {
                         window.location.assign('./login.html')
@@ -79,6 +81,7 @@ window.addEventListener("DOMContentLoaded", function () {
     //! creat todo list
     async function todoAdd(e) {
         e.preventDefault();
+        console.log('3');
         let liTag = document.createElement('li');
         await fetch(url, {
             method: 'POST',
@@ -93,7 +96,8 @@ window.addEventListener("DOMContentLoaded", function () {
         })
             .then(res => res.json())
             .then(res => {
-                let date = date_to_string(res.date)
+                console.log(res)
+                let date = date_to_string(res)
                 liTag.innerHTML = ` <p>${todoInput.value}</p>
                                     <section>
                                         <p>${date}</p>
@@ -106,7 +110,7 @@ window.addEventListener("DOMContentLoaded", function () {
                                     `
                 liTag.id = `${res._id}`;
             })
-            .catch(err => alert(err));
+            .catch(err => alert(err.message));
         todoAllList.appendChild(liTag);
         todoInput.value = '';
     }
@@ -274,7 +278,7 @@ window.addEventListener("DOMContentLoaded", function () {
             .then(res => res.json())
             .then((data) => {
                 data.forEach(function (element, index, arrayNode) {
-                    let date = date_to_string(element.date)
+                    let date = date_to_string(element.date);
                     if (element.completed === true) {
                         todoAllList.innerHTML += `<li id="${element._id}" class="completed">
                                                     <p>${element.title}</p>

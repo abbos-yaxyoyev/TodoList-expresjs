@@ -4,7 +4,6 @@ const { validateTodoList, errorUserNotFound } = require('../utils/utils');
 //************************************************************************* */
 
 async function getAllTodos(req, res) {
-    // throw new Error('serverdagi hatolik yuz berdi');
     const { _id } = req.user;
     const users = await getTodos(_id);
     errorUserNotFound(res, users);
@@ -30,8 +29,9 @@ async function postTodo(req, res) {
     }
     const { title } = req.body;
     const { _id } = req.user;
-    const user = await postCreatTodo(_id, title);
-    res.status(200).send(JSON.stringify(user.titles.pop()));
+    await postCreatTodo(_id, title);
+    res.status(200).send(new Date());
+
 }
 
 //************************************************************************* */

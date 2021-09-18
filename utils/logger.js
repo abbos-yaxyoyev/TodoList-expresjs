@@ -38,9 +38,9 @@ function processHandler() {
     // ilinmay qolgan hatolarni bashqarish uchun
     process.on('uncaughtException', exceptions => {
         logger.error(exceptions.message, exceptions);
-        logger.on('finish', () => {
-            process.exit(1);
-        });
+        // logger.on('finish', () => {
+        //     process.exit(1);
+        // });
     });
 
     //rejection handler hatolarni boshqarish uchun 

@@ -4,7 +4,7 @@ const { logger } = require('../utils/logger');
 function errorStatus500(err, req, res, next) {
     console.log('500');
     res.status(500).send('Could not perform the calculation!');
-    logger.error(`${err.status || 500} - ${res.statusMessage} - ${err.message} - ${req.originalUrl} - ${req.method} - ${req.ip}`);
+    logger.error(`${err.status || 500} - ${res.statusMessage} - ${err} - ${req.originalUrl} - ${req.method} - ${req.ip}`);
 }
 
 function errorStatus404(req, res, next) {

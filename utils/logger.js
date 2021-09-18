@@ -16,19 +16,19 @@ const logger = createLogger({
                 format.printf(info => `${info.level}: ${[info.timestamp]}: ${info.message}`),
             )
         }),
-        //! MongoDB transport
+        //? MongoDB transport
         new transports.MongoDB({
             level: 'error',
-            //! mongo database connection link
+            //? mongo database connection link
             db: 'mongodb://localhost/logs',
             options: {
                 useUnifiedTopology: true
             },
-            //! A collection to save json formatted logs
+            //? A collection to save json formatted logs
             collection: 'server_logs',
             format: format.combine(
                 format.timestamp(),
-                //! Convert logs to a json format
+                //? Convert logs to a json format
                 format.json())
         })
     ]

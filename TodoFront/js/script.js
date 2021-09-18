@@ -1,5 +1,4 @@
 if (!localStorage.getItem('token')) {
-    console.log('1');
     window.location.assign('./login.html')
 }
 window.addEventListener("DOMContentLoaded", function () {

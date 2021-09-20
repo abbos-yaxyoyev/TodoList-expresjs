@@ -1,3 +1,4 @@
+const config = require('config');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const { findAuthUser } = require('../models/authModel');
@@ -24,7 +25,7 @@ async function loginAuth(req, res) {
         res.status(400).send({ message: 'Login or Password is incorrect' })
     }
     console.log('5');
-    const token = jwt.sign({ _id: user._id }, secret, { expiresIn: '12d' })
+    const token = jwt.sign({ _id: user._id }, config.get('SECRET_KEY'), { expiresIn: '12d' })
     res.status(200).send(JSON.stringify(token));
 
 }

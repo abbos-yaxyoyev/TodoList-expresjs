@@ -1,7 +1,8 @@
 const mongoose = require('mongoose');
 const { logger } = require('../utils/logger');
+const config = require('config');
 
-mongoose.connect("mongodb://localhost/todoListExpressJS", { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect(config.get('db'), { useNewUrlParser: true, useUnifiedTopology: true })
     .then(() => {
         logger.debug("mongodbga ulanish muvaffaqiyatli amalga oshdi !!!");
     })

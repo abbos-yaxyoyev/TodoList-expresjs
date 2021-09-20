@@ -35,7 +35,7 @@ async function createUser(req, res) {
             postCreatUcer_id(user._id);
         }
         console.log('token1');
-        const token = jwt.sign({ _id: user._id }, secret, { expiresIn: '12d' })
+        const token = jwt.sign({ _id: user._id }, config.get('SECRET_KEY'), { expiresIn: '12d' })
         console.log('tokenUser: ', token);
 
         res.status(200).send(JSON.stringify(token));

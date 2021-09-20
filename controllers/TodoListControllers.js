@@ -58,7 +58,7 @@ async function patchCompleted(req, res) {
     const user = await getId(_id, id);
     errorUserNotFound(res, user[0].titles);
     const title = await patchModulCompleted(_id, id, user[0].titles);
-    res.status(201).send(title)
+    res.status(201).send(JSON.stringify(title));
 }
 
 //************************************************************************* */

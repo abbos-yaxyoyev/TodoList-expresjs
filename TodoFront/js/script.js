@@ -3,10 +3,11 @@ if (!localStorage.getItem('token')) {
 }
 window.addEventListener("DOMContentLoaded", function () {
     //!check token
+    const url = 'http://localhost:3000'
     tokenCheck()
     async function tokenCheck() {
         try {
-            await fetch('http://localhost:3000/api/checkedToken', {
+            await fetch(`${url}/api/checkedToken`, {
                 method: 'GET',
                 headers: {
                     'Authorization': 'Bearer ' + localStorage.getItem('token')
@@ -48,7 +49,7 @@ window.addEventListener("DOMContentLoaded", function () {
     const logaut = document.querySelector('.logout');
 
     //************************************************************************* */
-    const url = 'http://localhost:3000/api/todoList';
+    // const url = 'http://localhost:3000/api/todoList';
 
     todoAddButton.addEventListener('submit', addTodolist);
     todoAllList.addEventListener('click', deleteTodo);
@@ -80,9 +81,8 @@ window.addEventListener("DOMContentLoaded", function () {
     //! creat todo list
     async function todoAdd(e) {
         e.preventDefault();
-        console.log('3');
         let liTag = document.createElement('li');
-        await fetch(url, {
+        await fetch(`${url}/api/todoList`, {
             method: 'POST',
             headers: {
                 'Authorization': 'Bearer ' + localStorage.getItem('token'),
@@ -95,7 +95,6 @@ window.addEventListener("DOMContentLoaded", function () {
         })
             .then(res => res.json())
             .then(res => {
-                console.log(res)
                 let date = date_to_string(res)
                 liTag.innerHTML = ` <p>${todoInput.value}</p>
                                     <section>
@@ -122,7 +121,7 @@ window.addEventListener("DOMContentLoaded", function () {
         const id = todo.id;
         if (item.classList[0] === "trash") {
             //* delete from mongoDB
-            await fetch(`${url}/` + todo.id, {
+            await fetch(`${url}/api/todoList/` + todo.id, {
                 method: 'DELETE',
                 headers: {
                     'Authorization': 'Bearer ' + localStorage.getItem('token')
@@ -153,7 +152,7 @@ window.addEventListener("DOMContentLoaded", function () {
     //! todo list done complated status
     async function complateTodo(todo, id) {
         //* add complate class
-        await fetch(`${url}/` + id, {
+        await fetch(`${url}/api/todoList/` + id, {
             method: 'PATCH',
             headers: {
                 'Authorization': 'Bearer ' + localStorage.getItem('token'),
@@ -186,7 +185,7 @@ window.addEventListener("DOMContentLoaded", function () {
     async function editTodo(e) {
         e.preventDefault();
         const id = todoAddButton.id;
-        await fetch(`${url}/` + id, {
+        await fetch(`${url}/api/todoList/` + id, {
             method: 'PUT',
             headers: {
                 'Authorization': 'Bearer ' + localStorage.getItem('token'),
@@ -268,7 +267,7 @@ window.addEventListener("DOMContentLoaded", function () {
     //************************************************************************* */
 
     async function upDateAllTodo() {
-        await fetch(url, {
+        await fetch(`${url}/api/todoList`, {
             method: 'GET',
             headers: {
                 'Authorization': 'Bearer ' + localStorage.getItem('token')
@@ -313,7 +312,7 @@ window.addEventListener("DOMContentLoaded", function () {
     //************************************************************************* */
 
     async function upDateDoing() {
-        await fetch(url, {
+        await fetch(`${url}/api/todoList`, {
             method: 'GET',
             headers: {
                 'Authorization': 'Bearer ' + localStorage.getItem('token')
@@ -345,7 +344,7 @@ window.addEventListener("DOMContentLoaded", function () {
     //************************************************************************* */
 
     async function upDateDone() {
-        await fetch(url, {
+        await fetch(`${url}/api/todoList`, {
             method: 'GET',
             headers: {
                 'Authorization': 'Bearer ' + localStorage.getItem('token')
@@ -355,7 +354,7 @@ window.addEventListener("DOMContentLoaded", function () {
             .then((data) => {
                 data.forEach(function (element, index, arrayNode) {
                     let date = date_to_string(element.date)
-                    if (element.completed === true) {
+                    if (element.completed == true) {
                         todoDone.innerHTML += `<li id="${element._id}" class="completed">
                                                 <p>${element.title}</p>
                                                 <section>
@@ -368,7 +367,6 @@ window.addEventListener("DOMContentLoaded", function () {
                                                 </section>
                                             </li>
                                             `
-
                     }
                 })
             })

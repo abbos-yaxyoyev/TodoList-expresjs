@@ -36,11 +36,13 @@ const logger = createLogger({
 
 function processHandler() {
     // ilinmay qolgan hatolarni bashqarish uchun
+    console.log('log');
     process.on('uncaughtException', exceptions => {
+        console.log(exceptions);
         logger.error(exceptions.message, exceptions);
-        // logger.on('finish', () => {
-        //     process.exit(1);
-        // });
+        logger.on('finish', () => {
+            process.exit(1);
+        });
     });
 
     //rejection handler hatolarni boshqarish uchun 

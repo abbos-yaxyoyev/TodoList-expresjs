@@ -1,7 +1,7 @@
 {
   "name": "topshiriq",
   "version": "1.0.0",
-  "description": "",
+  "description": "1) server.js file run\r 2) index.html",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",

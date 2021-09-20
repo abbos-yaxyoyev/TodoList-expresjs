@@ -7,7 +7,7 @@ async function getAllTodos(req, res) {
     const { _id } = req.user;
     const users = await getTodos(_id);
     errorUserNotFound(res, users);
-    res.status(201).send(JSON.stringify(users.titles));
+    res.status(201).send(users.titles);
 }
 
 //************************************************************************* */

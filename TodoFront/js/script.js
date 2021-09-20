@@ -312,7 +312,7 @@ window.addEventListener("DOMContentLoaded", function () {
     //************************************************************************* */
 
     async function upDateDoing() {
-        await fetch(`${url}/api/todoList`, {
+        await fetch(`${url}/api/todoList/`, {
             method: 'GET',
             headers: {
                 'Authorization': 'Bearer ' + localStorage.getItem('token')
